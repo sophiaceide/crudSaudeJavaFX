@@ -11,40 +11,39 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.MainController">
    <children>
-      <Pane layoutX="-2.0" prefHeight="430.0" prefWidth="641.0" style="-fx-background-color: #FFFAF0;">
+      <Pane layoutX="-1.0" prefHeight="430.0" prefWidth="641.0" style="-fx-background-color: #FFFAF0;">
          <children>
-            <Button fx:id="btnSalvar" layoutX="22.0" layoutY="223.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Salvar" textFill="#1f1857" textOverrun="CLIP">
+            <Button fx:id="btnSalvar" layoutX="22.0" layoutY="272.0" mnemonicParsing="false" onAction="#btnSalvarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Salvar" textFill="#1f1857" textOverrun="CLIP">
                <font>
                   <Font name="Cambria Math" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnEditar" layoutX="22.0" layoutY="272.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Editar" textFill="#1f1857">
+            <Button fx:id="btnEditar" layoutX="22.0" layoutY="319.0" mnemonicParsing="false" onAction="#btnEditarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Editar" textFill="#1f1857">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnDeletar" layoutX="22.0" layoutY="323.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Deletar" textFill="#1f1857">
+            <Button fx:id="btnDeletar" layoutX="22.0" layoutY="369.0" mnemonicParsing="false" onAction="#btnDeletarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Deletar" textFill="#1f1857">
                <font>
                   <Font name="Cambria Math" size="14.0" />
                </font>
             </Button>
-            <Label layoutX="411.0" layoutY="31.0" prefHeight="25.0" prefWidth="21.0" text="ID">
+            <Label layoutX="420.0" layoutY="66.0" prefHeight="25.0" prefWidth="21.0" text="ID">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="txtNome" layoutX="98.0" layoutY="31.0" prefHeight="25.0" prefWidth="265.0" />
-            <TableView fx:id="tblConsulta" layoutX="116.0" layoutY="207.0" prefHeight="198.0" prefWidth="493.0" style="-fx-background-color: #E0FFFF;">
+            <TextField fx:id="txtNome" layoutX="107.0" layoutY="66.0" prefHeight="25.0" prefWidth="265.0" />
+            <TableView fx:id="tblConsulta" layoutX="116.0" layoutY="217.0" prefHeight="198.0" prefWidth="493.0" style="-fx-background-color: #E0FFFF;">
               <columns>
-                <TableColumn fx:id="colId" prefWidth="75.0" text="ID" />
-                <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
-                  <TableColumn fx:id="colIdade" prefWidth="75.0" text="Idade" />
-                  <TableColumn fx:id="colSintoma" prefWidth="75.0" text="Sintoma" />
-                  <TableColumn fx:id="colDuracao" prefWidth="88.0" text="Duração" />
-                  <TableColumn fx:id="colDoenca" prefWidth="104.0" text="Doença crônica" />
+                <TableColumn fx:id="colId" editable="false" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="colNome" editable="false" prefWidth="75.0" text="Nome" />
+                  <TableColumn fx:id="colIdade" editable="false" prefWidth="75.0" text="Idade" />
+                  <TableColumn fx:id="colSintoma" editable="false" prefWidth="75.0" text="Sintoma" />
+                  <TableColumn fx:id="colDuracao" editable="false" prefWidth="88.0" text="Duração" />
+                  <TableColumn fx:id="colDoenca" editable="false" prefWidth="104.0" text="Doença crônica" />
               </columns>
                <effect>
                   <DropShadow height="15.14" radius="8.535">
@@ -54,36 +53,46 @@
                   </DropShadow>
                </effect>
             </TableView>
-            <Label layoutX="37.0" layoutY="34.0" text="Nome">
+            <Label layoutX="44.0" layoutY="60.0" text="Nome">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="407.0" layoutY="82.0" text="Idade">
+            <Label layoutX="416.0" layoutY="117.0" text="Idade">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="32.0" layoutY="82.0" text="Sintoma">
+            <Label layoutX="39.0" layoutY="108.0" text="Sintoma">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="405.0" layoutY="129.0" text="Duração (dias)">
+            <Label layoutX="414.0" layoutY="164.0" text="Duração (dias)">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="29.0" layoutY="129.0" text="Possui doença crônica? (s/n)">
+            <Label layoutX="36.0" layoutY="155.0" text="Possui doença crônica? (s/n)">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="txtSintoma" layoutX="100.0" layoutY="79.0" prefHeight="25.0" prefWidth="265.0" />
-            <TextField fx:id="txtDoenca" layoutX="237.0" layoutY="125.0" prefHeight="25.0" prefWidth="128.0" />
-            <TextField fx:id="txtId" layoutX="458.0" layoutY="31.0" prefHeight="25.0" prefWidth="116.0" />
-            <TextField fx:id="txtIdade" layoutX="459.0" layoutY="79.0" prefHeight="25.0" prefWidth="116.0" />
-            <TextField fx:id="txtDuracao" layoutX="520.0" layoutY="128.0" prefHeight="25.0" prefWidth="56.0" />
+            <TextField fx:id="txtSintoma" layoutX="109.0" layoutY="114.0" prefHeight="25.0" prefWidth="265.0" />
+            <TextField fx:id="txtDoenca" layoutX="246.0" layoutY="160.0" prefHeight="25.0" prefWidth="128.0" />
+            <TextField fx:id="txtId" editable="false" layoutX="467.0" layoutY="66.0" prefHeight="25.0" prefWidth="116.0" />
+            <TextField fx:id="txtIdade" layoutX="468.0" layoutY="114.0" prefHeight="25.0" prefWidth="116.0" />
+            <TextField fx:id="txtDuracao" layoutX="529.0" layoutY="163.0" prefHeight="25.0" prefWidth="56.0" />
+            <Button fx:id="btnLimpar" layoutX="22.0" layoutY="224.0" mnemonicParsing="false" onAction="#btnLimparAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Limpar" textFill="#1f1857">
+               <font>
+                  <Font name="Cambria Math" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="229.0" layoutY="18.0" text="Cadastro de Paciente">
+               <font>
+                  <Font name="Cambria Math" size="22.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

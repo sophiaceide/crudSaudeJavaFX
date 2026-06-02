@@ -44,13 +44,13 @@ public class SaudeDAO {
             while (resultado.next()) {
 
                 SaudeDTO saude =  new SaudeDTO();
-                saude.setId(resultado.getId("id"));
-                saude.setNome(resultado.getNome("nome"));
-                saude.setIdade(resultado.getIdade("idade"));
-                saude.setSintoma(resultado.getSintoma("sintoma"));
-                saude.setDiasDuracao(resultado.setDiasDuracao("duracao_dias"));
-                saude.setDoencasCronicas(resultado.setDoencasCronicas("doencas_cronic"));
-                listaSaude.add(usuario);
+                saude.setId(resultado.getInt("id"));
+                saude.setNome(resultado.getString("nome"));
+                saude.setIdade(resultado.getInt("idade"));
+                saude.setSintoma(resultado.getString("sintoma"));
+                saude.setDiasDuracao(resultado.getInt("duracao_dias"));
+                saude.setDoencasCronicas(resultado.getString("doencas_cronic"));
+                listaSaude.add(saude);
 
             }
         } catch (SQLException e) {
