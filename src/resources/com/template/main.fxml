@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
@@ -13,30 +18,37 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.MainController">
    <children>
-      <Pane layoutX="-1.0" prefHeight="430.0" prefWidth="641.0" style="-fx-background-color: #FFFAF0;">
+      <Pane layoutX="7.0" prefHeight="430.0" prefWidth="641.0" style="-fx-background-color: #F0F8FF;">
          <children>
-            <Button fx:id="btnSalvar" layoutX="22.0" layoutY="272.0" mnemonicParsing="false" onAction="#btnSalvarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Salvar" textFill="#1f1857" textOverrun="CLIP">
+            <Button fx:id="btnSalvar" disable="true" layoutX="27.0" layoutY="265.0" mnemonicParsing="false" onAction="#btnSalvarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Salvar" textFill="#1f1857" textOverrun="CLIP">
                <font>
                   <Font name="Cambria Math" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnEditar" layoutX="22.0" layoutY="319.0" mnemonicParsing="false" onAction="#btnEditarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Editar" textFill="#1f1857">
+            <Button fx:id="btnEditar" disable="true" layoutX="27.0" layoutY="312.0" mnemonicParsing="false" onAction="#btnEditarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Editar" textFill="#1f1857">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnDeletar" layoutX="22.0" layoutY="369.0" mnemonicParsing="false" onAction="#btnDeletarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Deletar" textFill="#1f1857">
+            <Button fx:id="btnDeletar" disable="true" layoutX="27.0" layoutY="362.0" mnemonicParsing="false" onAction="#btnDeletarAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Deletar" textFill="#1f1857">
                <font>
                   <Font name="Cambria Math" size="14.0" />
                </font>
             </Button>
-            <Label layoutX="420.0" layoutY="66.0" prefHeight="25.0" prefWidth="21.0" text="ID">
+            <Label layoutX="441.0" layoutY="56.0" prefHeight="25.0" prefWidth="21.0" text="ID">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="txtNome" layoutX="107.0" layoutY="66.0" prefHeight="25.0" prefWidth="265.0" />
-            <TableView fx:id="tblConsulta" layoutX="116.0" layoutY="217.0" prefHeight="198.0" prefWidth="493.0" style="-fx-background-color: #E0FFFF;">
+            <TextField fx:id="txtNome" layoutX="121.0" layoutY="56.0" prefHeight="25.0" prefWidth="265.0">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.5098039507865906" green="0.7098039388656616" blue="0.8549019694328308" />
+                     </color>
+                  </InnerShadow>
+               </effect></TextField>
+            <TableView fx:id="tblConsulta" layoutX="121.0" layoutY="210.0" onMouseClicked="#carregarCampos" prefHeight="198.0" prefWidth="493.0" style="-fx-background-color: #FFFFFF;">
               <columns>
                 <TableColumn fx:id="colId" editable="false" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="colNome" editable="false" prefWidth="75.0" text="Nome" />
@@ -53,46 +65,84 @@
                   </DropShadow>
                </effect>
             </TableView>
-            <Label layoutX="44.0" layoutY="60.0" text="Nome">
+            <Label layoutX="69.0" layoutY="59.0" text="Nome">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="416.0" layoutY="117.0" text="Idade">
+            <Label layoutX="429.0" layoutY="102.0" text="Idade">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="39.0" layoutY="108.0" text="Sintoma">
+            <Label layoutX="52.0" layoutY="102.0" text="Sintoma">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="414.0" layoutY="164.0" text="Duração (dias)">
+            <Label layoutX="425.0" layoutY="145.0" text="Duração (dias)">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="36.0" layoutY="155.0" text="Possui doença crônica? (s/n)">
+            <Label layoutX="54.0" layoutY="146.0" text="Possui doença crônica? ">
                <font>
                   <Font name="Cambria Math" size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="txtSintoma" layoutX="109.0" layoutY="114.0" prefHeight="25.0" prefWidth="265.0" />
-            <TextField fx:id="txtDoenca" layoutX="246.0" layoutY="160.0" prefHeight="25.0" prefWidth="128.0" />
-            <TextField fx:id="txtId" editable="false" layoutX="467.0" layoutY="66.0" prefHeight="25.0" prefWidth="116.0" />
-            <TextField fx:id="txtIdade" layoutX="468.0" layoutY="114.0" prefHeight="25.0" prefWidth="116.0" />
-            <TextField fx:id="txtDuracao" layoutX="529.0" layoutY="163.0" prefHeight="25.0" prefWidth="56.0" />
-            <Button fx:id="btnLimpar" layoutX="22.0" layoutY="224.0" mnemonicParsing="false" onAction="#btnLimparAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Limpar" textFill="#1f1857">
+            <TextField fx:id="txtSintoma" layoutX="122.0" layoutY="99.0" prefHeight="25.0" prefWidth="265.0">
+               <cursor>
+                  <Cursor fx:constant="CROSSHAIR" />
+               </cursor>
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.5098039507865906" green="0.7098039388656616" blue="0.8549019694328308" />
+                     </color>
+                  </InnerShadow>
+               </effect></TextField>
+            <TextField fx:id="txtId" editable="false" layoutX="480.0" layoutY="51.0" prefHeight="25.0" prefWidth="116.0">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.5098039507865906" green="0.7098039388656616" blue="0.8549019694328308" />
+                     </color>
+                  </InnerShadow>
+               </effect></TextField>
+            <TextField fx:id="txtIdade" layoutX="481.0" layoutY="99.0" prefHeight="25.0" prefWidth="116.0">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.5098039507865906" green="0.7098039388656616" blue="0.8549019694328308" />
+                     </color>
+                  </InnerShadow>
+               </effect></TextField>
+            <TextField fx:id="txtDuracao" layoutX="539.0" layoutY="144.0" prefHeight="25.0" prefWidth="56.0">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.5098039507865906" green="0.7098039388656616" blue="0.8549019694328308" />
+                     </color>
+                  </InnerShadow>
+               </effect></TextField>
+            <Button fx:id="btnLimpar" disable="true" layoutX="27.0" layoutY="217.0" mnemonicParsing="false" onAction="#btnLimparAction" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #B0E0E6;" text="Limpar" textFill="#1f1857">
                <font>
                   <Font name="Cambria Math" size="14.0" />
                </font>
             </Button>
-            <Label layoutX="229.0" layoutY="18.0" text="Cadastro de Paciente">
+            <Label layoutX="240.0" layoutY="8.0" text="Cadastro de Paciente">
                <font>
                   <Font name="Cambria Math" size="22.0" />
                </font>
             </Label>
+            <RadioButton fx:id="rbDoenca" layoutX="228.0" layoutY="148.0" mnemonicParsing="false" text="Não/Sim" />
+            <ImageView fitHeight="75.0" fitWidth="70.0" layoutX="-5.0" layoutY="-7.0">
+               <image>
+                  <Image url="@../../../../../../Downloads/20260608_154858_0000.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblMensagem" layoutX="280.0" layoutY="179.0" prefHeight="17.0" prefWidth="116.0" text="Salvo com sucesso!" visible="false" />
+            <Label fx:id="lblValidacao" layoutX="219.0" layoutY="188.0" text="Por favor, preencher todos os campos!" />
          </children>
       </Pane>
    </children>

@@ -1,18 +1,25 @@
 package com.template;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainController
-{
+import static javafx.application.Application.launch;
+
+public class MainController {
     @FXML private Button btnSalvar;
     @FXML private Button btnEditar;
     @FXML private Button btnDeletar;
@@ -30,17 +37,24 @@ public class MainController
     @FXML private TextField txtSintoma;
     @FXML private TextField txtDoenca;
     @FXML private TextField txtIdade;
-
+    @FXML private RadioButton rbDoenca;
+    @FXML private Label lblMensagem;
+    @FXML private Label lblValidacao;
+    @FXML private Label lblMensagemDados;
 
 
 
     @FXML
-    private void btnSalvarAction(ActionEvent event){
+    private void btnSalvarAction(ActionEvent event) {
+
+        if (!preencherCampos()) {
+            return;
+        }
+
         String nome = txtNome.getText();
 
         int idade = Integer.parseInt(txtIdade.getText());
         String sintoma = txtSintoma.getText();
-        String doenca = txtDoenca.getText();
         int diasDuracao = Integer.parseInt(txtDuracao.getText());
 
         SaudeDTO saudeDto = new SaudeDTO();
@@ -49,16 +63,31 @@ public class MainController
         saudeDto.setIdade(idade);
         saudeDto.setSintoma(sintoma);
         saudeDto.setDiasDuracao(diasDuracao);
-        saudeDto.setDoencasCronicas(doenca);
+        if (rbDoenca.isSelected()) {
+            saudeDto.setDoencasCronicas("s");
+        } else {
+            saudeDto.setDoencasCronicas("n");
+        }
 
         SaudeDAO saudeDao = new SaudeDAO();
         saudeDao.inserirSaude(saudeDto);
-
+        if(saudeDto != null){
+            lblMensagem.setVisible(true);
+            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+            pausa.setOnFinished(e -> lblMensagem.setVisible(false));
+            pausa.play();
+        }
         carregarConsulta();
+        btnLimparAction(null); // Limpa os campos automaticamente após salvar (Ótimo UX!)
+
+
+
+
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
+        lblValidacao.setVisible(false);
         //colocando etiquetas nas colunas do SB com o mesmo nome do DAO
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -66,11 +95,20 @@ public class MainController
         colSintoma.setCellValueFactory(new PropertyValueFactory<>("sintoma"));
         colDoenca.setCellValueFactory(new PropertyValueFactory<>("doencasCronicas"));
         colDuracao.setCellValueFactory(new PropertyValueFactory<>("diasDuracao"));
+
+
+        // 3. AGORA SIM: Escuta quando alguém digita alguma coisa no campo Nome
+        btnEditar.disableProperty().bind(txtNome.textProperty().isEmpty());
+        btnDeletar.disableProperty().bind(txtNome.textProperty().isEmpty());
+        btnSalvar.disableProperty().bind(txtNome.textProperty().isEmpty());
+        btnLimpar.disableProperty().bind(txtNome.textProperty().isEmpty());
+
+        // 4. Carrega a lista inicial do banco
         carregarConsulta();
     }
 
     @FXML
-    private void btnLimparAction(ActionEvent event){
+    private void btnLimparAction(ActionEvent event) {
         txtId.clear();
         txtNome.clear();
         txtIdade.clear();
@@ -80,16 +118,23 @@ public class MainController
     }
 
     @FXML
-    private void carregarConsulta(){
+    private void carregarConsulta() {
         //Listar recebe return do DAO
         //Listar recebe a tabela setando os itens dela
         SaudeDAO saudeDao = new SaudeDAO();
         ArrayList<SaudeDTO> listarSaude = saudeDao.listarSaude();
         tblConsulta.setItems(FXCollections.observableArrayList(listarSaude));
+
+
     }
 
     @FXML
     private void btnEditarAction(ActionEvent event) {
+
+        if (!preencherCampos()) {
+            return;
+        }
+
         SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
 
         if (pacienteSelecionado != null) {
@@ -103,7 +148,7 @@ public class MainController
             saudeDto.setDiasDuracao(Integer.parseInt(txtDuracao.getText()));
 
 
-            SaudeDAO saudeDao = new  SaudeDAO();
+            SaudeDAO saudeDao = new SaudeDAO();
 
             saudeDao.atualizarSaude(saudeDto);
 
@@ -116,7 +161,7 @@ public class MainController
     @FXML
     private void btnDeletarAction(ActionEvent event) {
         SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
-        if(pacienteSelecionado != null){
+        if (pacienteSelecionado != null) {
             SaudeDAO saudeDAO = new SaudeDAO();
             saudeDAO.excluirSaude(pacienteSelecionado);
         }
@@ -132,12 +177,50 @@ public class MainController
         if (saudeDto != null) {
             txtId.setText(String.valueOf(saudeDto.getId()));
             txtNome.setText(saudeDto.getNome());
-            txtDoenca.setText(saudeDto.getDoencasCronicas());
+            if (rbDoenca.isSelected()) {
+                saudeDto.setDoencasCronicas("s");
+            } else {
+                saudeDto.setDoencasCronicas("n");
+            }
             txtSintoma.setText(saudeDto.getSintoma());
             txtDuracao.setText(String.valueOf(saudeDto.getDiasDuracao()));
             txtIdade.setText(String.valueOf(saudeDto.getIdade()));
+
         }
     }
 
+    private boolean preencherCampos() {
+        if (txtNome.getText().trim().isEmpty() ||
+                txtIdade.getText().trim().isEmpty() ||
+                txtSintoma.getText().trim().isEmpty() ||
+                txtDuracao.getText().trim().isEmpty()) {
 
+            // Avisa o usuário na tela
+            //lblValidacao.setText("Por favor, preencha todos os campos!");
+            lblValidacao.setVisible(true);
+
+            // Faz o aviso sumir em 3 segundos
+            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+            pausa.setOnFinished(e -> lblValidacao.setVisible(false));
+            pausa.play();
+
+            return false; // Retorna falso porque tem campo vazio
+        }
+        try {
+            Integer.parseInt(txtIdade.getText().trim());
+            Integer.parseInt(txtDuracao.getText().trim());
+
+        } catch (NumberFormatException e) {
+            // Reutiliza a MESMA lblValidacao, mudando apenas a mensagem!
+            lblValidacao.setText("Não inserir letras nos campos idade e duração!");
+            lblValidacao.setVisible(true);
+
+            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
+            pausa.play();
+
+            return false;
+        }
+        return true;
+    }
 }

@@ -10,10 +10,10 @@ public class Main extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/template/TelaInicial.fxml"));
         Scene scene = new Scene(loader.load(),641,430);
 
-        stage.setTitle("Cadastro de Paciente");
+        stage.setTitle("Cadastro de Paciente - Início");
         stage.setScene(scene);
         stage.show();
     }
