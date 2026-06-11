@@ -88,6 +88,7 @@ public class MainController {
     @FXML
     public void initialize() {
         lblValidacao.setVisible(false);
+        lblMensagemDados.setVisible(false);
         //colocando etiquetas nas colunas do SB com o mesmo nome do DAO
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -114,7 +115,6 @@ public class MainController {
         txtIdade.clear();
         txtSintoma.clear();
         txtDuracao.clear();
-        txtDoenca.clear();
     }
 
     @FXML
@@ -188,7 +188,10 @@ public class MainController {
 
         }
     }
-
+    private boolean verificarLetra(String texto) {
+        String regra = "^[a-zA-ZáéíóúàèìòùâêîôûãõçÇÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃÕ\\s]+$";
+        return texto.matches(regra); //metodo matches retorna boolean (se coincidiu com a regra ou nao
+    }
     private boolean preencherCampos() {
         if (txtNome.getText().trim().isEmpty() ||
                 txtIdade.getText().trim().isEmpty() ||
@@ -206,21 +209,38 @@ public class MainController {
 
             return false; // Retorna falso porque tem campo vazio
         }
+        if(!verificarLetra(txtNome.getText())){
+            lblValidacao.setText("Erro: O nome deve conter apenas letras e espaços");
+            lblValidacao.setVisible(true);
+            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
+            pausa.play();
+            return false;
+        }
+        if(!verificarLetra(txtSintoma.getText())){
+            lblValidacao.setText("Erro: Os sintomas devem conter apenas letras e espaços");
+            lblValidacao.setVisible(true);
+            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
+            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
+            pausa.play();
+            return false;
+        }
         try {
             Integer.parseInt(txtIdade.getText().trim());
             Integer.parseInt(txtDuracao.getText().trim());
 
         } catch (NumberFormatException e) {
             // Reutiliza a MESMA lblValidacao, mudando apenas a mensagem!
-            lblValidacao.setText("Não inserir letras nos campos idade e duração!");
-            lblValidacao.setVisible(true);
+            lblMensagemDados.setText("Não inserir letras nos campos idade e duração!");
+            lblMensagemDados.setVisible(true);
 
             PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
+            pausa.setOnFinished(ev -> lblMensagemDados.setVisible(false));
             pausa.play();
 
             return false;
         }
+
         return true;
     }
 }
