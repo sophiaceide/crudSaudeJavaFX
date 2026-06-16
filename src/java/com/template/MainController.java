@@ -144,7 +144,11 @@ public class MainController {
             saudeDto.setNome(txtNome.getText());
             saudeDto.setIdade(Integer.parseInt(txtIdade.getText()));
             saudeDto.setSintoma(txtSintoma.getText());
-            saudeDto.setDoencasCronicas(txtDoenca.getText());
+            if (rbDoenca.isSelected()) {
+                saudeDto.setDoencasCronicas("s");
+            } else {
+                saudeDto.setDoencasCronicas("n");
+            }
             saudeDto.setDiasDuracao(Integer.parseInt(txtDuracao.getText()));
 
 

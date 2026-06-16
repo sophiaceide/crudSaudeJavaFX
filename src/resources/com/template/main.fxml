@@ -142,8 +142,8 @@
                </image>
             </ImageView>
             <Label fx:id="lblMensagem" layoutX="280.0" layoutY="179.0" prefHeight="17.0" prefWidth="116.0" text="Salvo com sucesso!" visible="false" />
-            <Label fx:id="lblValidacao" layoutX="218.0" layoutY="183.0" text="Por favor, preencher todos os campos!" />
-            <Label fx:id="lblMensagemDados" layoutX="159.0" layoutY="183.0" text="Atenção! Preencher os campos com os tipos de dados corretos!" />
+            <Label fx:id="lblValidacao" layoutX="218.0" layoutY="183.0" text="Por favor, preencher todos os campos!" visible="false" />
+            <Label fx:id="lblMensagemDados" layoutX="159.0" layoutY="183.0" text="Atenção! Preencher os campos com os tipos de dados corretos!" visible="false" />
          </children>
       </Pane>
    </children>
