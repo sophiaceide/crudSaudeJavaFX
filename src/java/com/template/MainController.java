@@ -98,13 +98,13 @@ public class MainController {
         colDuracao.setCellValueFactory(new PropertyValueFactory<>("diasDuracao"));
 
 
-        // 3. AGORA SIM: Escuta quando alguém digita alguma coisa no campo Nome
+
         btnEditar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnDeletar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnSalvar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnLimpar.disableProperty().bind(txtNome.textProperty().isEmpty());
 
-        // 4. Carrega a lista inicial do banco
+
         carregarConsulta();
     }
 
@@ -202,7 +202,7 @@ public class MainController {
                 txtSintoma.getText().trim().isEmpty() ||
                 txtDuracao.getText().trim().isEmpty()) {
 
-            // Avisa o usuário na tela
+
             //lblValidacao.setText("Por favor, preencha todos os campos!");
             lblValidacao.setVisible(true);
 
@@ -211,7 +211,7 @@ public class MainController {
             pausa.setOnFinished(e -> lblValidacao.setVisible(false));
             pausa.play();
 
-            return false; // Retorna falso porque tem campo vazio
+            return false;
         }
         if(!verificarLetra(txtNome.getText())){
             lblValidacao.setText("Erro: O nome deve conter apenas letras e espaços");
@@ -234,7 +234,7 @@ public class MainController {
             Integer.parseInt(txtDuracao.getText().trim());
 
         } catch (NumberFormatException e) {
-            // Reutiliza a MESMA lblValidacao, mudando apenas a mensagem!
+
             lblMensagemDados.setText("Não inserir letras nos campos idade e duração!");
             lblMensagemDados.setVisible(true);
 

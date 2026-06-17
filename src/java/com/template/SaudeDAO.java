@@ -59,15 +59,16 @@ public class SaudeDAO {
         return listaSaude;
     }
     public void atualizarSaude(SaudeDTO saude) {
+        // Atualiza todos os dados (inclusive o nome) e busca pelo ID único
+        String sql = "UPDATE saude SET nome=?, idade=?, sintoma=?, duracao_dias=?, doencas_cronic=? WHERE id=?";
 
-        String sql = "UPDATE saude SET idade=?, sintoma=?, duracao_dias=?, doencas_cronic=? WHERE nome=?";
-
-        try(Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql);){
-            ps.setInt(1, saude.getIdade());
-            ps.setString(2, saude.getSintoma());
-            ps.setInt(3, saude.getDiasDuracao());
-            ps.setString(4, saude.getDoencasCronicas());
-            ps.setString(5, saude.getNome());
+        try (Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql);) {
+            ps.setString(1, saude.getNome());
+            ps.setInt(2, saude.getIdade());
+            ps.setString(3, saude.getSintoma());
+            ps.setInt(4, saude.getDiasDuracao());
+            ps.setString(5, saude.getDoencasCronicas());
+            ps.setInt(6, saude.getId()); // Passa o ID correto no WHERE
 
             ps.executeUpdate();
         } catch (SQLException e) {
