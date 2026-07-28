@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F0F8FF;" xmlns="http://javafx.com/javafx/25.0.3" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.controller.InicioController">
+   <children>
+      <Label layoutX="205.0" layoutY="55.0" text="Consulta Saúde ">
+         <font>
+            <Font name="Cambria Math" size="32.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="130.0" fitWidth="108.0" layoutX="17.0" layoutY="-6.0">
+         <image>
+            <Image url="@Images/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="124.0" layoutY="148.0" text="Um sistema projetado para armazenas suas consultas médicas">
+         <font>
+            <Font name="Cambria Math" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="105.0" layoutY="181.0" text="e para facilitar a organização de seus pacientes de maneira acessível">
+         <font>
+            <Font name="Cambria Math" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnIniciar" layoutX="229.0" layoutY="271.0" mnemonicParsing="false" onAction="#BotaoIniciar" prefHeight="36.0" prefWidth="158.0" style="-fx-background-color: AFD8E0;" text="Iniciar">
+         <font>
+            <Font name="Cambria Math" size="16.0" />
+         </font>
+         <effect>
+            <InnerShadow>
+               <color>
+                  <Color red="0.15789473056793213" green="0.3368421196937561" blue="0.4736842215061188" opacity="0.5199999809265137" />
+               </color>
+            </InnerShadow>
+         </effect>
+      </Button>
+   </children>
+</AnchorPane>
