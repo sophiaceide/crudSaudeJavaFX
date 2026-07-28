@@ -1,22 +1,19 @@
-package com.template;
+package com.template.controller;
 
-import javafx.animation.FadeTransition;
+import com.template.model.dao.SaudeDAO;
+import com.template.model.dto.SaudeDTO;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.template.util.DialogUtil.mostrarErro;
+import static com.template.util.DialogUtil.mostrarInfo;
 import static javafx.application.Application.launch;
 
 public class MainController {
@@ -48,6 +45,7 @@ public class MainController {
     private void btnSalvarAction(ActionEvent event) {
 
         if (!preencherCampos()) {
+            mostrarErro("Erro! Preencha todos os campos!");
             return;
         }
 
@@ -57,32 +55,29 @@ public class MainController {
         String sintoma = txtSintoma.getText();
         int diasDuracao = Integer.parseInt(txtDuracao.getText());
 
-        SaudeDTO saudeDto = new SaudeDTO();
-        saudeDto.setNome(nome);
+        SaudeDTO saudeDTO = new SaudeDTO();
+        saudeDTO.setNome(nome);
 
-        saudeDto.setIdade(idade);
-        saudeDto.setSintoma(sintoma);
-        saudeDto.setDiasDuracao(diasDuracao);
+        saudeDTO.setIdade(idade);
+        saudeDTO.setSintoma(sintoma);
+        saudeDTO.setDiasDuracao(diasDuracao);
         if (rbDoenca.isSelected()) {
-            saudeDto.setDoencasCronicas("s");
+            saudeDTO.setDoencasCronicas("s");
         } else {
-            saudeDto.setDoencasCronicas("n");
+            saudeDTO.setDoencasCronicas("n");
         }
 
-        SaudeDAO saudeDao = new SaudeDAO();
-        saudeDao.inserirSaude(saudeDto);
-        if(saudeDto != null){
+        SaudeDAO saudeDAO = new SaudeDAO();
+        saudeDAO.inserirSaude(saudeDTO);
+        if(saudeDTO != null){
             lblMensagem.setVisible(true);
             PauseTransition pausa = new PauseTransition(Duration.seconds(3));
             pausa.setOnFinished(e -> lblMensagem.setVisible(false));
             pausa.play();
         }
         carregarConsulta();
-        btnLimparAction(null); // Limpa os campos automaticamente após salvar (Ótimo UX!)
-
-
-
-
+        btnLimparAction(null); // Limpa os campos automaticamente após salvar
+        mostrarInfo("Paciente atualizado com sucesso!");
     }
 
     @FXML
@@ -121,8 +116,8 @@ public class MainController {
     private void carregarConsulta() {
         //Listar recebe return do DAO
         //Listar recebe a tabela setando os itens dela
-        SaudeDAO saudeDao = new SaudeDAO();
-        ArrayList<SaudeDTO> listarSaude = saudeDao.listarSaude();
+        SaudeDAO saudeDAO = new SaudeDAO();
+        ArrayList<SaudeDTO> listarSaude = saudeDAO.listarSaude();
         tblConsulta.setItems(FXCollections.observableArrayList(listarSaude));
 
 
@@ -132,6 +127,7 @@ public class MainController {
     private void btnEditarAction(ActionEvent event) {
 
         if (!preencherCampos()) {
+            mostrarErro("Erro! Preencha todos os campos!");
             return;
         }
 
@@ -152,12 +148,13 @@ public class MainController {
             saudeDto.setDiasDuracao(Integer.parseInt(txtDuracao.getText()));
 
 
-            SaudeDAO saudeDao = new SaudeDAO();
+            SaudeDAO saudeDAO = new SaudeDAO();
 
-            saudeDao.atualizarSaude(saudeDto);
+            saudeDAO.atualizarSaude(saudeDto);
 
             carregarConsulta();
             btnLimparAction(null);
+            mostrarInfo("Paciente atualizado com sucesso!");
         }
 
     }
@@ -169,8 +166,12 @@ public class MainController {
             SaudeDAO saudeDAO = new SaudeDAO();
             saudeDAO.excluirSaude(pacienteSelecionado);
         }
+        else{
+            mostrarErro("Erro! Preencha todos os campos do paciente!");
+        }
         carregarConsulta();
         btnLimparAction(null);
+        mostrarInfo("Paciente deletado com sucesso!");
     }
 
     @FXML
@@ -235,6 +236,7 @@ public class MainController {
 
         } catch (NumberFormatException e) {
 
+            mostrarErro("Erro!");
             lblMensagemDados.setText("Não inserir letras nos campos idade e duração!");
             lblMensagemDados.setVisible(true);
 

@@ -1,4 +1,7 @@
-package com.template;
+package com.template.model.dao;
+
+import com.template.model.Conexao;
+import com.template.model.dto.SaudeDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.template.util.DialogUtil.mostrarErro;
 
 
 public class SaudeDAO {
@@ -27,7 +32,8 @@ public class SaudeDAO {
             ps.execute();
         }
         catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao inserir dados!", e);
+            mostrarErro("Erro!");
+            logger.log(Level.SEVERE, "Falha ao inserir dados!", e);
         }
     }
 
@@ -54,7 +60,8 @@ public class SaudeDAO {
 
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao apresentar!", e);
+            mostrarErro("Erro!");
+            logger.log(Level.SEVERE, "Falha ao apresentar dados!", e);
         }
         return listaSaude;
     }
@@ -72,7 +79,8 @@ public class SaudeDAO {
 
             ps.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao atualizar!", e);
+            mostrarErro("Erro!");
+            logger.log(Level.SEVERE, "Falha ao atualizar!", e);
         }
     }
     public void excluirSaude(SaudeDTO saude) {
@@ -84,7 +92,8 @@ public class SaudeDAO {
             ps.execute();
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao deletar!", e);
+            mostrarErro("Erro!");
+            logger.log(Level.SEVERE, "Falha ao deletar!", e);
         }
 
     }
