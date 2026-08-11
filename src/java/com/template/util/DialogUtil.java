@@ -19,4 +19,12 @@ public class DialogUtil {
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+
+    public static void showWarning(String mensagem){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Aviso");
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
+    }
 }

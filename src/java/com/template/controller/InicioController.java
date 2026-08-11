@@ -19,7 +19,9 @@ public class InicioController {
     private void BotaoIniciar(ActionEvent event) {
         try {
             // CORREÇÃO: Altere de "TelaInicial.fxml" para "main.fxml"
-            Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/com/template/main.fxml")
+            );
 
             // Pega a janela (Stage) atual através do clique do botão
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

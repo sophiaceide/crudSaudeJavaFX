@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import static com.template.util.DialogUtil.mostrarErro;
 import static com.template.util.DialogUtil.mostrarInfo;
+import static com.template.validator.SaudeValidator.validarPaciente;
 import static javafx.application.Application.launch;
 
 public class MainController {
@@ -93,7 +94,10 @@ public class MainController {
         colDuracao.setCellValueFactory(new PropertyValueFactory<>("diasDuracao"));
 
 
-
+        //CORRIGIR
+        //ATENCAO VALIDAR
+        //  if (validarPaciente(txtNome.getText().trim(), txtIdade.getText().trim(), txtSintoma.getText().trim(),txtDuracao.getText().trim())) {
+       // if(validarPaciente(btnEditar.disableProperty().(txtNome.textProperty()), ))
         btnEditar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnDeletar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnSalvar.disableProperty().bind(txtNome.textProperty().isEmpty());
@@ -102,6 +106,8 @@ public class MainController {
 
         carregarConsulta();
     }
+
+
 
     @FXML
     private void btnLimparAction(ActionEvent event) {
@@ -198,10 +204,12 @@ public class MainController {
         return texto.matches(regra); //metodo matches retorna boolean (se coincidiu com a regra ou nao
     }
     private boolean preencherCampos() {
-        if (txtNome.getText().trim().isEmpty() ||
-                txtIdade.getText().trim().isEmpty() ||
-                txtSintoma.getText().trim().isEmpty() ||
-                txtDuracao.getText().trim().isEmpty()) {
+
+        String termo = txtNome.getText().trim();
+        String termo2 = txtIdade.getText().trim();
+        String termo3 = txtSintoma.getText().trim();
+        String termo4 = txtDuracao.getText().trim();
+        if (validarPaciente(txtNome.getText().trim(), txtIdade.getText().trim(), txtSintoma.getText().trim(),txtDuracao.getText().trim())) {
 
 
             //lblValidacao.setText("Por favor, preencha todos os campos!");
