@@ -1,27 +1,23 @@
 package com.template.controller;
 
-import com.template.model.dao.SaudeDAO;
 import com.template.model.dto.SaudeDTO;
-import javafx.animation.PauseTransition;
+import com.template.services.SaudeService;
+import com.template.validator.SaudeValidator;
+import com.template.util.DialogUtil;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Duration;
-
-import java.util.ArrayList;
-
-import static com.template.util.DialogUtil.mostrarErro;
-import static com.template.util.DialogUtil.mostrarInfo;
-import static com.template.validator.SaudeValidator.validarPaciente;
-import static javafx.application.Application.launch;
 
 public class MainController {
+
     @FXML private Button btnSalvar;
     @FXML private Button btnEditar;
     @FXML private Button btnDeletar;
     @FXML private Button btnLimpar;
+
     @FXML private TableView<SaudeDTO> tblConsulta;
     @FXML private TableColumn<SaudeDTO, Integer> colId;
     @FXML private TableColumn<SaudeDTO, String> colNome;
@@ -29,63 +25,20 @@ public class MainController {
     @FXML private TableColumn<SaudeDTO, String> colSintoma;
     @FXML private TableColumn<SaudeDTO, Integer> colDuracao;
     @FXML private TableColumn<SaudeDTO, String> colDoenca;
-    @FXML private TextField txtNome;
-    @FXML private TextField txtDuracao;
+
     @FXML private TextField txtId;
-    @FXML private TextField txtSintoma;
-    @FXML private TextField txtDoenca;
+    @FXML private TextField txtNome;
     @FXML private TextField txtIdade;
+    @FXML private TextField txtSintoma;
+    @FXML private TextField txtDuracao;
     @FXML private RadioButton rbDoenca;
-    @FXML private Label lblMensagem;
-    @FXML private Label lblValidacao;
-    @FXML private Label lblMensagemDados;
 
-
-
-    @FXML
-    private void btnSalvarAction(ActionEvent event) {
-
-        if (!preencherCampos()) {
-            mostrarErro("Erro! Preencha todos os campos!");
-            return;
-        }
-
-        String nome = txtNome.getText();
-
-        int idade = Integer.parseInt(txtIdade.getText());
-        String sintoma = txtSintoma.getText();
-        int diasDuracao = Integer.parseInt(txtDuracao.getText());
-
-        SaudeDTO saudeDTO = new SaudeDTO();
-        saudeDTO.setNome(nome);
-
-        saudeDTO.setIdade(idade);
-        saudeDTO.setSintoma(sintoma);
-        saudeDTO.setDiasDuracao(diasDuracao);
-        if (rbDoenca.isSelected()) {
-            saudeDTO.setDoencasCronicas("s");
-        } else {
-            saudeDTO.setDoencasCronicas("n");
-        }
-
-        SaudeDAO saudeDAO = new SaudeDAO();
-        saudeDAO.inserirSaude(saudeDTO);
-        if(saudeDTO != null){
-            lblMensagem.setVisible(true);
-            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(e -> lblMensagem.setVisible(false));
-            pausa.play();
-        }
-        carregarConsulta();
-        btnLimparAction(null); // Limpa os campos automaticamente após salvar
-        mostrarInfo("Paciente atualizado com sucesso!");
-    }
+    // Encapsulamento e Imutabilidade: Instância do serviço para regras de negócio
+    private final SaudeService saudeService = new SaudeService();
 
     @FXML
     public void initialize() {
-        lblValidacao.setVisible(false);
-        lblMensagemDados.setVisible(false);
-        //colocando etiquetas nas colunas do SB com o mesmo nome do DAO
+        // Mapeamento das colunas com a SaudeDTO
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colIdade.setCellValueFactory(new PropertyValueFactory<>("idade"));
@@ -93,21 +46,96 @@ public class MainController {
         colDoenca.setCellValueFactory(new PropertyValueFactory<>("doencasCronicas"));
         colDuracao.setCellValueFactory(new PropertyValueFactory<>("diasDuracao"));
 
-
-        //CORRIGIR
-        //ATENCAO VALIDAR
-        //  if (validarPaciente(txtNome.getText().trim(), txtIdade.getText().trim(), txtSintoma.getText().trim(),txtDuracao.getText().trim())) {
-       // if(validarPaciente(btnEditar.disableProperty().(txtNome.textProperty()), ))
+        // Regra de desabilitação de botões baseada no campo Nome
         btnEditar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnDeletar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnSalvar.disableProperty().bind(txtNome.textProperty().isEmpty());
         btnLimpar.disableProperty().bind(txtNome.textProperty().isEmpty());
 
-
         carregarConsulta();
     }
 
+    @FXML
+    private void btnSalvarAction(ActionEvent event) {
+        if (!validarFormulario()) {
+            return;
+        }
 
+        try {
+            saudeService.salvarPaciente(
+                    txtNome.getText().trim(),
+                    Integer.parseInt(txtIdade.getText().trim()),
+                    txtSintoma.getText().trim(),
+                    Integer.parseInt(txtDuracao.getText().trim()),
+                    rbDoenca.isSelected()
+            );
+
+            DialogUtil.mostrarInfo("Paciente cadastrado com sucesso!");
+            carregarConsulta();
+            btnLimparAction(null);
+        } catch (Exception e) {
+            DialogUtil.mostrarErro("Erro ao salvar paciente: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void btnEditarAction(ActionEvent event) {
+        SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
+        if (pacienteSelecionado == null) {
+            DialogUtil.mostrarErro("Selecione um paciente na tabela para editar.");
+            return;
+        }
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+        try {
+            saudeService.atualizarPaciente(
+                    pacienteSelecionado.getId(),
+                    txtNome.getText().trim(),
+                    Integer.parseInt(txtIdade.getText().trim()),
+                    txtSintoma.getText().trim(),
+                    Integer.parseInt(txtDuracao.getText().trim()),
+                    rbDoenca.isSelected()
+            );
+
+            DialogUtil.mostrarInfo("Paciente atualizado com sucesso!");
+            carregarConsulta();
+            btnLimparAction(null);
+        } catch (Exception e) {
+            DialogUtil.mostrarErro("Erro ao atualizar paciente: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void btnDeletarAction(ActionEvent event) {
+        SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
+
+        if (pacienteSelecionado == null) {
+            DialogUtil.mostrarErro("Selecione um paciente na tabela para excluir.");
+            return;
+        }
+
+        try {
+            // 1. Deleta no banco via Service
+            saudeService.excluirPaciente(pacienteSelecionado);
+
+            // 2. Limpa a seleção atual da tabela
+            tblConsulta.getSelectionModel().clearSelection();
+
+            // 3. Recarrega os dados e força a atualização visual IMEDIATAMENTE
+            carregarConsulta();
+            tblConsulta.refresh();
+            btnLimparAction(null);
+
+            // 4. Mostra a mensagem por último (com a tela já atualizada ao fundo)
+            DialogUtil.mostrarInfo("Paciente deletado com sucesso!");
+
+        } catch (Exception e) {
+            DialogUtil.mostrarErro("Erro ao deletar paciente: " + e.getMessage());
+        }
+    }
 
     @FXML
     private void btnLimparAction(ActionEvent event) {
@@ -116,142 +144,50 @@ public class MainController {
         txtIdade.clear();
         txtSintoma.clear();
         txtDuracao.clear();
-    }
-
-    @FXML
-    private void carregarConsulta() {
-        //Listar recebe return do DAO
-        //Listar recebe a tabela setando os itens dela
-        SaudeDAO saudeDAO = new SaudeDAO();
-        ArrayList<SaudeDTO> listarSaude = saudeDAO.listarSaude();
-        tblConsulta.setItems(FXCollections.observableArrayList(listarSaude));
-
-
-    }
-
-    @FXML
-    private void btnEditarAction(ActionEvent event) {
-
-        if (!preencherCampos()) {
-            mostrarErro("Erro! Preencha todos os campos!");
-            return;
-        }
-
-        SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
-
-        if (pacienteSelecionado != null) {
-            SaudeDTO saudeDto = new SaudeDTO();
-
-            saudeDto.setId(pacienteSelecionado.getId());
-            saudeDto.setNome(txtNome.getText());
-            saudeDto.setIdade(Integer.parseInt(txtIdade.getText()));
-            saudeDto.setSintoma(txtSintoma.getText());
-            if (rbDoenca.isSelected()) {
-                saudeDto.setDoencasCronicas("s");
-            } else {
-                saudeDto.setDoencasCronicas("n");
-            }
-            saudeDto.setDiasDuracao(Integer.parseInt(txtDuracao.getText()));
-
-
-            SaudeDAO saudeDAO = new SaudeDAO();
-
-            saudeDAO.atualizarSaude(saudeDto);
-
-            carregarConsulta();
-            btnLimparAction(null);
-            mostrarInfo("Paciente atualizado com sucesso!");
-        }
-
-    }
-
-    @FXML
-    private void btnDeletarAction(ActionEvent event) {
-        SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
-        if (pacienteSelecionado != null) {
-            SaudeDAO saudeDAO = new SaudeDAO();
-            saudeDAO.excluirSaude(pacienteSelecionado);
-        }
-        else{
-            mostrarErro("Erro! Preencha todos os campos do paciente!");
-        }
-        carregarConsulta();
-        btnLimparAction(null);
-        mostrarInfo("Paciente deletado com sucesso!");
+        rbDoenca.setSelected(false);
     }
 
     @FXML
     private void carregarCampos() {
-        SaudeDTO saudeDto = tblConsulta.getSelectionModel().getSelectedItem();
-
-        //se nao estiver vazio, faz o setText, setando a informação do texto
-        if (saudeDto != null) {
-            txtId.setText(String.valueOf(saudeDto.getId()));
-            txtNome.setText(saudeDto.getNome());
-            if (rbDoenca.isSelected()) {
-                saudeDto.setDoencasCronicas("s");
-            } else {
-                saudeDto.setDoencasCronicas("n");
-            }
-            txtSintoma.setText(saudeDto.getSintoma());
-            txtDuracao.setText(String.valueOf(saudeDto.getDiasDuracao()));
-            txtIdade.setText(String.valueOf(saudeDto.getIdade()));
-
+        SaudeDTO pacienteSelecionado = tblConsulta.getSelectionModel().getSelectedItem();
+        if (pacienteSelecionado != null) {
+            txtId.setText(String.valueOf(pacienteSelecionado.getId()));
+            txtNome.setText(pacienteSelecionado.getNome());
+            txtIdade.setText(String.valueOf(pacienteSelecionado.getIdade()));
+            txtSintoma.setText(pacienteSelecionado.getSintoma());
+            txtDuracao.setText(String.valueOf(pacienteSelecionado.getDiasDuracao()));
+            rbDoenca.setSelected("s".equalsIgnoreCase(pacienteSelecionado.getDoencasCronicas()));
         }
     }
-    private boolean verificarLetra(String texto) {
-        String regra = "^[a-zA-ZáéíóúàèìòùâêîôûãõçÇÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃÕ\\s]+$";
-        return texto.matches(regra); //metodo matches retorna boolean (se coincidiu com a regra ou nao
+
+    private void carregarConsulta() {
+        tblConsulta.setItems(FXCollections.observableArrayList(saudeService.buscarTodos()));
     }
-    private boolean preencherCampos() {
 
-        String termo = txtNome.getText().trim();
-        String termo2 = txtIdade.getText().trim();
-        String termo3 = txtSintoma.getText().trim();
-        String termo4 = txtDuracao.getText().trim();
-        if (validarPaciente(txtNome.getText().trim(), txtIdade.getText().trim(), txtSintoma.getText().trim(),txtDuracao.getText().trim())) {
+    private boolean validarFormulario() {
+        String nome = txtNome.getText().trim();
+        String idade = txtIdade.getText().trim();
+        String sintoma = txtSintoma.getText().trim();
+        String duracao = txtDuracao.getText().trim();
 
-
-            //lblValidacao.setText("Por favor, preencha todos os campos!");
-            lblValidacao.setVisible(true);
-
-            // Faz o aviso sumir em 3 segundos
-            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(e -> lblValidacao.setVisible(false));
-            pausa.play();
-
+        // 1. Método fornecido pela professora para checar campos vazios
+        if (!SaudeValidator.validarPaciente(nome, idade, sintoma, duracao)) {
             return false;
         }
-        if(!verificarLetra(txtNome.getText())){
-            lblValidacao.setText("Erro: O nome deve conter apenas letras e espaços");
-            lblValidacao.setVisible(true);
-            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
-            pausa.play();
+
+        // 2. Validações complementares de formato
+        if (!SaudeValidator.ApenasLetras(nome)) {
+            DialogUtil.mostrarErro("O campo Nome deve conter apenas letras e espaços.");
             return false;
         }
-        if(!verificarLetra(txtSintoma.getText())){
-            lblValidacao.setText("Erro: Os sintomas devem conter apenas letras e espaços");
-            lblValidacao.setVisible(true);
-            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(ev -> lblValidacao.setVisible(false));
-            pausa.play();
+
+        if (!SaudeValidator.ApenasLetras(sintoma)) {
+            DialogUtil.mostrarErro("O campo Sintoma deve conter apenas letras e espaços.");
             return false;
         }
-        try {
-            Integer.parseInt(txtIdade.getText().trim());
-            Integer.parseInt(txtDuracao.getText().trim());
 
-        } catch (NumberFormatException e) {
-
-            mostrarErro("Erro!");
-            lblMensagemDados.setText("Não inserir letras nos campos idade e duração!");
-            lblMensagemDados.setVisible(true);
-
-            PauseTransition pausa = new PauseTransition(Duration.seconds(3));
-            pausa.setOnFinished(ev -> lblMensagemDados.setVisible(false));
-            pausa.play();
-
+        if (!SaudeValidator.NumeroValido(idade) || !SaudeValidator.NumeroValido(duracao)) {
+            DialogUtil.mostrarErro("Campos Idade e Duração devem conter apenas números inteiros.");
             return false;
         }
 

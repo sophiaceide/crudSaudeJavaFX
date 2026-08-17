@@ -13,89 +13,88 @@ import java.util.logging.Logger;
 
 import static com.template.util.DialogUtil.mostrarErro;
 
-
 public class SaudeDAO {
 
     private static final Logger logger = Logger.getLogger(SaudeDAO.class.getName());
 
-
-
     public void inserirSaude(SaudeDTO saude) {
         String sql = "INSERT INTO saude(nome, idade, sintoma, duracao_dias, doencas_cronic) VALUES(?, ?, ?, ?, ?)";
 
-        try(Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql); ) {
+        try (Connection c = new Conexao().conectaBD();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
             ps.setString(1, saude.getNome());
             ps.setInt(2, saude.getIdade());
             ps.setString(3, saude.getSintoma());
             ps.setInt(4, saude.getDiasDuracao());
             ps.setString(5, saude.getDoencasCronicas());
             ps.execute();
-        }
-        catch (SQLException e) {
-            mostrarErro("Erro!");
+        } catch (SQLException e) {
+            mostrarErro("Erro ao cadastrar paciente!");
             logger.log(Level.SEVERE, "Falha ao inserir dados!", e);
         }
     }
 
-    ArrayList<SaudeDTO> listaSaude = new ArrayList<>();
-
     public ArrayList<SaudeDTO> listarSaude() {
+        String sql = "SELECT * FROM saude";
+        ArrayList<SaudeDTO> listaLocal = new ArrayList<>(); // Lista local nova a cada consulta
 
-        String sql = "select * from saude";
-        ArrayList<SaudeDTO> listarSaude = new ArrayList<>();
-
-
-        try(Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql); ResultSet resultado = ps.executeQuery(); ){
+        try (Connection c = new Conexao().conectaBD();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet resultado = ps.executeQuery()) {
 
             while (resultado.next()) {
-
-                SaudeDTO saude =  new SaudeDTO();
+                SaudeDTO saude = new SaudeDTO();
                 saude.setId(resultado.getInt("id"));
                 saude.setNome(resultado.getString("nome"));
                 saude.setIdade(resultado.getInt("idade"));
                 saude.setSintoma(resultado.getString("sintoma"));
                 saude.setDiasDuracao(resultado.getInt("duracao_dias"));
                 saude.setDoencasCronicas(resultado.getString("doencas_cronic"));
-                listaSaude.add(saude);
 
+                listaLocal.add(saude);
             }
         } catch (SQLException e) {
-            mostrarErro("Erro!");
+            mostrarErro("Erro ao carregar lista de pacientes!");
             logger.log(Level.SEVERE, "Falha ao apresentar dados!", e);
         }
-        return listaSaude;
+
+        return listaLocal;
     }
+
     public void atualizarSaude(SaudeDTO saude) {
-        // Atualiza todos os dados (inclusive o nome) e busca pelo ID único
         String sql = "UPDATE saude SET nome=?, idade=?, sintoma=?, duracao_dias=?, doencas_cronic=? WHERE id=?";
 
-        try (Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql);) {
+        try (Connection c = new Conexao().conectaBD();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+
             ps.setString(1, saude.getNome());
             ps.setInt(2, saude.getIdade());
             ps.setString(3, saude.getSintoma());
             ps.setInt(4, saude.getDiasDuracao());
             ps.setString(5, saude.getDoencasCronicas());
-            ps.setInt(6, saude.getId()); // Passa o ID correto no WHERE
+            ps.setInt(6, saude.getId());
 
             ps.executeUpdate();
         } catch (SQLException e) {
-            mostrarErro("Erro!");
+            mostrarErro("Erro ao atualizar paciente!");
             logger.log(Level.SEVERE, "Falha ao atualizar!", e);
         }
     }
+
     public void excluirSaude(SaudeDTO saude) {
-        String sql = "DELETE FROM saude WHERE nome=?";
+        // CORRIGIDO: Deleta usando o ID único do registro
+        String sql = "DELETE FROM saude WHERE id=?";
 
+        try (Connection c = new Conexao().conectaBD();
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
-        try(Connection c = new Conexao().conectaBD(); PreparedStatement ps = c.prepareStatement(sql); ) {
-            ps.setString(1, saude.getNome());
-            ps.execute();
+            ps.setInt(1, saude.getId());
+            ps.executeUpdate();
 
         } catch (SQLException e) {
-            mostrarErro("Erro!");
+            mostrarErro("Erro ao deletar paciente!");
             logger.log(Level.SEVERE, "Falha ao deletar!", e);
         }
-
     }
-
 }
