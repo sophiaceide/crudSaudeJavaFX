@@ -2,7 +2,6 @@ package com.template.controller;
 
 import com.template.model.dto.SaudeDTO;
 import com.template.services.SaudeService;
-import com.template.validator.SaudeValidator;
 import com.template.util.DialogUtil;
 
 import javafx.collections.FXCollections;
@@ -169,22 +168,22 @@ public class MainController {
         String duracao = txtDuracao.getText().trim();
 
 
-        if (!SaudeValidator.validarPaciente(nome, idade, sintoma, duracao)) {
+        if (!DialogUtil.SaudeValidator.validarPaciente(nome, idade, sintoma, duracao)) {
             return false;
         }
 
 
-        if (!SaudeValidator.ApenasLetras(nome)) {
+        if (!DialogUtil.SaudeValidator.ApenasLetras(nome)) {
             DialogUtil.mostrarErro("O campo Nome deve conter apenas letras e espaços.");
             return false;
         }
 
-        if (!SaudeValidator.ApenasLetras(sintoma)) {
+        if (!DialogUtil.SaudeValidator.ApenasLetras(sintoma)) {
             DialogUtil.mostrarErro("O campo Sintoma deve conter apenas letras e espaços.");
             return false;
         }
 
-        if (!SaudeValidator.NumeroValido(idade) || !SaudeValidator.NumeroValido(duracao)) {
+        if (!DialogUtil.SaudeValidator.NumeroValido(idade) || !DialogUtil.SaudeValidator.NumeroValido(duracao)) {
             DialogUtil.mostrarErro("Campos Idade e Duração devem conter apenas números inteiros.");
             return false;
         }
