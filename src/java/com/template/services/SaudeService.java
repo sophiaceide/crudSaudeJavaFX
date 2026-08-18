@@ -13,13 +13,13 @@ public class SaudeService {
         this.saudeDAO = new SaudeDAO();
     }
 
-    public void salvarPaciente(String nome, int idade, String sintoma, int duracao, boolean temDoencaCronica) {
-        SaudeDTO dto = montarDTO(null, nome, idade, sintoma, duracao, temDoencaCronica);
+    public void salvarPaciente(String nome, int idade, String sintoma, int duracao, boolean doencaCronica) {
+        SaudeDTO dto = montarDTO(null, nome, idade, sintoma, duracao, doencaCronica);
         saudeDAO.inserirSaude(dto);
     }
 
-    public void atualizarPaciente(int id, String nome, int idade, String sintoma, int duracao, boolean temDoencaCronica) {
-        SaudeDTO dto = montarDTO(id, nome, idade, sintoma, duracao, temDoencaCronica);
+    public void atualizarPaciente(int id, String nome, int idade, String sintoma, int duracao, boolean doencaCronica) {
+        SaudeDTO dto = montarDTO(id, nome, idade, sintoma, duracao, doencaCronica);
         saudeDAO.atualizarSaude(dto);
     }
 
@@ -31,8 +31,7 @@ public class SaudeService {
         return saudeDAO.listarSaude();
     }
 
-    private SaudeDTO montarDTO(Integer id, String nome, int idade, String sintoma,
-                               int duracao, boolean temDoencaCronica) {
+    private SaudeDTO montarDTO(Integer id, String nome, int idade, String sintoma, int duracao, boolean doencaCronica) {
         SaudeDTO saudeDto = new SaudeDTO();
         if (id != null) {
             saudeDto.setId(id);
@@ -41,7 +40,7 @@ public class SaudeService {
         saudeDto.setIdade(idade);
         saudeDto.setSintoma(sintoma);
         saudeDto.setDiasDuracao(duracao);
-        saudeDto.setDoencasCronicas(temDoencaCronica ? "s" : "n");
+        saudeDto.setDoencasCronicas(doencaCronica ? "s" : "n");
         return saudeDto;
     }
 }

@@ -13,15 +13,8 @@ public class SaudeValidator {
         return true;
     }
 
-    public static boolean validarTermo(String termo) {
-        if (termo.isEmpty()) {
-            showWarning("Digite um termo de pesquisa");
-            return false;
-        }
-        return true;
-    }
 
-    //private pq o controller nao precisa ter acesso, transformando em uma constante imutável
+    //constante de expressao
     private static final String REGEX_LETRAS =
             "^[a-zA-ZáéíóúàèìòùâêîôûãõçÇÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÃÕ\\s]+$";
 

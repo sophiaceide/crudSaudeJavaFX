@@ -17,7 +17,6 @@ public class MainController {
     @FXML private Button btnEditar;
     @FXML private Button btnDeletar;
     @FXML private Button btnLimpar;
-
     @FXML private TableView<SaudeDTO> tblConsulta;
     @FXML private TableColumn<SaudeDTO, Integer> colId;
     @FXML private TableColumn<SaudeDTO, String> colNome;
@@ -25,7 +24,6 @@ public class MainController {
     @FXML private TableColumn<SaudeDTO, String> colSintoma;
     @FXML private TableColumn<SaudeDTO, Integer> colDuracao;
     @FXML private TableColumn<SaudeDTO, String> colDoenca;
-
     @FXML private TextField txtId;
     @FXML private TextField txtNome;
     @FXML private TextField txtIdade;
@@ -170,12 +168,12 @@ public class MainController {
         String sintoma = txtSintoma.getText().trim();
         String duracao = txtDuracao.getText().trim();
 
-        // 1. Método fornecido pela professora para checar campos vazios
+
         if (!SaudeValidator.validarPaciente(nome, idade, sintoma, duracao)) {
             return false;
         }
 
-        // 2. Validações complementares de formato
+
         if (!SaudeValidator.ApenasLetras(nome)) {
             DialogUtil.mostrarErro("O campo Nome deve conter apenas letras e espaços.");
             return false;
