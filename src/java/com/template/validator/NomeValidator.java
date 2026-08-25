@@ -29,3 +29,6 @@ public class NomeValidator implements Validador<String>{
         return valor;
     }
 }
+
+
+

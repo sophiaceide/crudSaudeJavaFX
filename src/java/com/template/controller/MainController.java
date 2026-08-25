@@ -4,6 +4,7 @@ import com.template.model.dto.SaudeDTO;
 import com.template.services.SaudeService;
 import com.template.util.DialogUtil;
 
+import com.template.validator.UsuarioValidator;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +55,7 @@ public class MainController {
 
     @FXML
     private void btnSalvarAction(ActionEvent event) {
-        if (!validarFormulario()) {
+        if (!UsuarioValidator.validarUsuario(txtNome.getText(),txtIdade.getText(), txtSintoma.getText(), txtDuracao.getText())) {
             return;
         }
 
@@ -83,7 +84,7 @@ public class MainController {
             return;
         }
 
-        if (!validarFormulario()) {
+        if (!UsuarioValidator.validarUsuario(txtNome.getText(),txtIdade.getText(), txtSintoma.getText(), txtDuracao.getText())) {
             return;
         }
 
